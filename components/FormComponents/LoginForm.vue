@@ -5,8 +5,8 @@
 
         <Form v-slot="$form" :initialValues :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-60">
             <div class="flex flex-col gap-1">
-                <InputText name="username" type="text" placeholder="Username" fluid />
-                <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{ $form.username.error.message }}</Message>
+                <InputText name="email" type="text" placeholder="Email" fluid />
+                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error.message }}</Message>
             </div>
             <div class="flex flex-col gap-1">
                 <Password name="password" placeholder="Password" :feedback="false" toggleMask fluid />
@@ -26,17 +26,19 @@ import { ref } from 'vue';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from 'primevue/usetoast';
+import { useAuthStore } from '@/stores/auth';
 
 const toast = useToast();
+const { setLogin, isLogin } = useAuthStore();
 
 const initialValues = ref({
-    username: '',
+    email: '',
     password: ''
 });
 
 const resolver = zodResolver(
     z.object({
-        username: z.string().min(1, { message: 'Username is required.' }),
+        email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid.' }),
         password: z
             .string()
             .min(3, { message: 'Minimum 3 characters.' })
@@ -61,8 +63,11 @@ const onFormSubmit = (e) => {
     // e.values: An object containing the current values of all form fields.
     // e.reset: A function that resets the form to its initial state.
 
-    if (e.valid) {
-        toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
+  if (e.valid) {
+    setLogin(e.values)
+    if (isLogin.value) {
+      toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
     }
+  }
 };
 </script>
