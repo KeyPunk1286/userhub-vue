@@ -5,7 +5,7 @@
 
         <Form v-slot="$form" :initialValues :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-60">
             <div class="flex flex-col gap-1">
-                <InputText name="email" type="text" placeholder="Email" fluid />
+                <InputText  name="email" type="text" placeholder="Email" fluid />
                 <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error.message }}</Message>
             </div>
             <div class="flex flex-col gap-1">
@@ -41,8 +41,8 @@ const resolver = zodResolver(
         email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid.' }),
         password: z
             .string()
-            .min(3, { message: 'Minimum 3 characters.' })
-            .max(8, { message: 'Maximum 8 characters.' })
+            .min(5, { message: 'Minimum 5 characters.' })
+            .max(15, { message: 'Maximum 15 characters.' })
             .refine((value) => /[a-z]/.test(value), {
                 message: 'Must have a lowercase letter.'
             })

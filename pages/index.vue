@@ -1,11 +1,12 @@
 <template>
     <div class="flex flex-col gap-4 items-center justify-center h-screen">
         <h1 class="text-3xl font-bold">Welcome to UserHub</h1>
-        <LoginForm />
-        <NuxtLink to="/register">Don’t have an account? Register</NuxtLink>
+        <div>
+            <NuxtLink to="/register"><span class="mr-3">You can register here</span> <i class="pi pi-user-plus"></i></NuxtLink>
+        </div>
     </div>
 </template>
 
 <script setup>
-import LoginForm from '@/components/FormComponents/LoginForm.vue';
+
 </script>
