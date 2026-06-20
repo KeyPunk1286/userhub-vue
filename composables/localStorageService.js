@@ -1,5 +1,6 @@
 export function useLocalStorage(){
   const setItem = (key, value) => {
+    if(typeof window === 'undefined') return
   try {
     localStorage.setItem(key, value)
   } catch (error) {
@@ -8,10 +9,9 @@ export function useLocalStorage(){
   }
 
   const getItem = (key) => {
+     if(typeof window === 'undefined') return null
     try {
-      const storageValue = localStorage.getItem(key)
-      if (storageValue === null) return null
-      return storageValue
+      return localStorage.getItem(key)
     } catch (error) {
       console.error("Error geting from localStorage", error);
       return null;
@@ -19,6 +19,7 @@ export function useLocalStorage(){
   }
 
   const deleteItem = (key) => {
+    if(typeof window === 'undefined') return
     try {
       localStorage.removeItem(key)
     } catch (error) {

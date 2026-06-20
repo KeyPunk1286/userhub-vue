@@ -52,11 +52,12 @@ import { reactive } from 'vue';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from 'primevue/usetoast';
-import { useRegistration } from '@/composables/registration'
-
-const { isRegistrationSuccess, setRegistrationValue } = useRegistration();
+import { useAuthStore } from "@/stores/auth";
+import { navigateTo } from "#app";
 
 const toast = useToast();
+
+const authStore = useAuthStore()
 
 const initialValues = reactive({
   email: '',
@@ -69,21 +70,35 @@ const initialValues = reactive({
 const resolver = zodResolver(
   z.object({
     email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: 'Email is not valid.' }),
-    firstName: z.string().min(1, { message: 'First name is required.' }),
-    lastName: z.string().min(1, { message: 'Last name is required.' }),
-    password: z.string().min(1, { message: 'Password is required.' }),
-    details: z.string().min(1, { message: 'Details are required.' })
+    firstName: z.string().min(2, { message: 'First name must contain at least 2 characters.' }).max(30, {message: 'First name must contain at most 30 characters.'}),
+    lastName: z.string().min(2, { message: 'Last name must contain at least 2 characters.' }).max(30, { message: 'Last name must contain at most 30 characters.'}),
+    password: z.string().min(5, {  message: 'Password must contain at least 5 characters.' }).max(20, {message: 'Password must be at most 20 characters.'}),
+    details: z.string().min(1, { message: 'Details must contain at least 1 characters.' }).max(200, {message: 'Details must contain at most 200 characters.'})
   })
 );
 
-const onFormSubmit = ({ valid, errors, values }) => {
+const onFormSubmit = async ({ valid, errors, values }) => {
 
-    console.log('Form Values:', values);
-   if (valid) {
-    setRegistrationValue(values);
-    toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
-  } else {
-    toast.add({ severity: 'error', summary: 'Form has errors.', detail: JSON.stringify(errors), life: 3000 });
+  try {
+    if (valid) {
+    await authStore.registrationUser(values)
+
+    toast.add({
+    severity: 'success',
+    summary: 'Registration successful',
+    life: 3000
+    })
+
+    navigateTo('/login')
+    }
+  } catch (error) {
+     toast.add({
+    severity: 'error',
+    summary: 'Registration Error',
+    detail: error.message,
+    life: 3000
+  })
   }
+
 };
 </script>

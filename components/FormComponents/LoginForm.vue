@@ -26,10 +26,12 @@ import { ref } from 'vue';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from 'primevue/usetoast';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from "@/stores/auth";
+
 
 const toast = useToast();
-const { setLogin, isLogin } = useAuthStore();
+const authStore = useAuthStore()
+const { loginUser } = authStore
 
 const initialValues = ref({
     email: '',
@@ -42,7 +44,7 @@ const resolver = zodResolver(
         password: z
             .string()
             .min(5, { message: 'Minimum 5 characters.' })
-            .max(15, { message: 'Maximum 15 characters.' })
+            .max(20, { message: 'Maximum 20 characters.' })
             .refine((value) => /[a-z]/.test(value), {
                 message: 'Must have a lowercase letter.'
             })
@@ -55,7 +57,7 @@ const resolver = zodResolver(
     })
 );
 
-const onFormSubmit = (e) => {
+const onFormSubmit = async (e) => {
     // e.originalEvent: Represents the native form submit event.
     // e.valid: A boolean that indicates whether the form is valid or not.
     // e.states: Contains the current state of each form field, including validity status.
@@ -63,11 +65,33 @@ const onFormSubmit = (e) => {
     // e.values: An object containing the current values of all form fields.
     // e.reset: A function that resets the form to its initial state.
 
-  if (e.valid) {
-    setLogin(e.values)
-    if (isLogin.value) {
-      toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
+    try {
+    if (e.valid) {
+      const response = await loginUser(e.values)
+
+      if (response) {
+          console.log('loginform-response', response);
+        toast.add({ severity: 'success', summary: 'Login successful', life: 3000 })
+        // checkToken()
+        navigateTo('/')
+      } else {
+console.log('loginForm-response');
+
+        throw new Error("Login failed: no token returned")
+      }
     }
+    } catch (error) {
+    console.log('loginForm-catch', error);
+    
+    toast.add({
+      severity: 'error',
+      summary: 'Login failed',
+      detail: error.message || error,
+      life: 3000
+    })
   }
+    
+
+    
 };
 </script>

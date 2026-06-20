@@ -1,32 +1,76 @@
-import { ref } from 'vue';
-import {navigateTo} from '#app';
+import { defineStore } from 'pinia'
+import { ref, computed } from "vue";
+import axios from "axios";
+import { useLocalStorage } from "../composables/localStorageService";
+import { TOKEN_KEY } from "../constants/utils";
 
-export const useAuthStore = () => {
-  const isLogin = ref(false);
 
-  const setLogin = (value) => {
-    const userEmail = localStorage.getItem('email')
-    const userPassword = localStorage.getItem('password')
-    const firstUserName = localStorage.getItem('firstName')
-    if (value) {
-      if (userEmail === value.email && userPassword === value.password) {
-        isLogin.value = true;
-        navigateTo(`/user/${firstUserName}`);
-       
-      } else {
-        console.log('Invalid credentials');
-       }
-      // if (value.userName === userEmail.value && value.password === userPassword.value) {
-      // }
-      // else { 
-      //   console.log('Invalid credentials');
-      // }
+export const useAuthStore = defineStore('auth', () => {
+  const { setItem, getItem, deleteItem } = useLocalStorage()
+  
+  
+  const userInfo = ref(null)
+  const token = ref(null)
+  const isLogin = computed(()=> !!token.value)
+
+  async function loginUser(data) {
+    try {
+      if(!data) return
+      const res = await axios.post('http://localhost:5000/users/login', data, { headers: { 'Content-Type': 'application/json' } })      
+      const { jwt, userData } = res?.data
+      console.log('loginStore',jwt, userData );
+      if (!jwt) {
+      throw new Error('Login failed')
+      }
+      setItem(TOKEN_KEY, jwt)
+      token.value = jwt
+      userInfo.value = userData
+      return true
+    } catch (error) {
+      throw new Error(error.response?.data?.message || error.message || "Unknown error")
     }
- 
   }
 
-  return {
-    isLogin,
-    setLogin
+  async function initAuth() {
+   const t = getItem(TOKEN_KEY)
+   if (!t) return
+   try {
+     token.value = t
+     const response = await axios.get('http://localhost:5000/users/get-user', {
+       headers: {
+       Authorization: `Bearer ${t}`
+       }
+     })
+     if (response?.data) {
+       userInfo.value = response?.data
+     }
+   } catch (error) {
+     deleteItem(TOKEN_KEY)
+     userInfo.value = null 
+     token.value = null
+   }
   }
-}
+
+   function logOut() {
+     deleteItem(TOKEN_KEY)
+      userInfo.value = null
+     token.value = null
+     return true
+   }
+  
+  async function registrationUser(data) {
+    if (!data) return
+    try {
+      const responseRegistration = await axios.post('http://localhost:5000/users/registration', data, { headers: { 'Content-Type': 'application/json' } })
+      return true
+    } catch (error) {
+      throw new Error(
+    error.response?.data?.message ||
+    error.message ||
+    'Registration failed'
+  )
+    }
+  }
+
+  return{isLogin, userInfo, token, loginUser, initAuth, logOut, registrationUser}
+})
