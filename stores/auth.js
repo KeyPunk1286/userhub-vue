@@ -9,7 +9,13 @@ export const useAuthStore = defineStore('auth', () => {
   const { setItem, getItem, deleteItem } = useLocalStorage()
   
   
-  const userInfo = ref(null)
+  const userInfo = ref({
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    details: '',
+  })
   const token = ref(null)
   const isLogin = computed(()=> !!token.value)
 
@@ -43,6 +49,8 @@ export const useAuthStore = defineStore('auth', () => {
      })
      if (response?.data) {
        userInfo.value = response?.data
+       console.log(userInfo.value);
+       
      }
    } catch (error) {
      deleteItem(TOKEN_KEY)
@@ -72,5 +80,24 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return{isLogin, userInfo, token, loginUser, initAuth, logOut, registrationUser}
+  async function updateUserData(data) {
+    if (!data) return
+    try {
+      const resUpdate = await axios.put('http://localhost:5000/users/update-user', data, {
+        headers: {
+          Authorization: `Bearer ${token.value}`, 
+          'Content-Type': 'application/json'
+        }
+      })
+      console.log(resUpdate?.data);
+      userInfo.value = resUpdate?.data
+      return true
+    } catch (error) {
+       throw new Error(error.response?.data?.message || error.message || "Unknown error")
+    }
+    // console.log('updateUserData:store', data);
+    
+  }
+
+  return{isLogin, userInfo, token, loginUser, initAuth, logOut, registrationUser, updateUserData}
 })

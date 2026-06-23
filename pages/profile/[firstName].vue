@@ -11,7 +11,7 @@
         <p>{{userInfo.email}}</p>
       </div>
       <div>
-        <button><i class="pi pi-pencil"></i></button>
+        <button class="cursor-pointer" @click="moveToEditPage"><i class="pi pi-pencil"></i></button>
       </div>
 
     </div>
@@ -22,9 +22,14 @@
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
+import { navigateTo } from "#app";
 
 const authStore = useAuthStore()
 const { userInfo } = storeToRefs(authStore)
+
+const moveToEditPage = () => {
+  navigateTo('/profile/edit')
+}
 
 definePageMeta({
   middleware: 'auth'
