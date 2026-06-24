@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-4 items-center justify-center h-screen">
     <h1>edit user data</h1>
     <EditForm />
   </div>

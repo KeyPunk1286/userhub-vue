@@ -4,8 +4,8 @@
       <li>
         <NuxtLink to="/"> Home </NuxtLink>
       </li>
-      <li>
-        <NuxtLink :to="userInfo ? `/profile/${userInfo.firstName}` : '/'">
+      <li v-if="isLogin">
+        <NuxtLink  :to="`/profile/${userInfo.firstName}`">
           Profile
         </NuxtLink>
       </li>
