@@ -1,1 +1,1 @@
-export const TOKEN_KEY = 'userhub'
+export const TOKEN_KEY = 'userhub';

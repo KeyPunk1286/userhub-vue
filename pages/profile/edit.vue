@@ -1,12 +1,10 @@
 <template>
-<div>
-  <h1>edit user data</h1>
-  <EditForm />
-</div>
+  <div class="flex flex-col gap-4 items-center justify-center h-screen">
+    <h1>edit user data</h1>
+    <EditForm />
+  </div>
 </template>
 
 <script setup>
-import EditForm from "@/components/FormComponents/EditForm.vue";
-
-
+import EditForm from '@/components/FormComponents/EditForm.vue';
 </script>

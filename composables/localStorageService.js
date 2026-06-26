@@ -1,31 +1,31 @@
-export function useLocalStorage(){
+export function useLocalStorage() {
   const setItem = (key, value) => {
-    if(typeof window === 'undefined') return
-  try {
-    localStorage.setItem(key, value)
-  } catch (error) {
-    console.error("Error saving in localStorage", error);
-  }
-  }
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.error('Error saving in localStorage', error);
+    }
+  };
 
   const getItem = (key) => {
-     if(typeof window === 'undefined') return null
+    if (typeof window === 'undefined') return null;
     try {
-      return localStorage.getItem(key)
+      return localStorage.getItem(key);
     } catch (error) {
-      console.error("Error geting from localStorage", error);
+      console.error('Error geting from localStorage', error);
       return null;
     }
-  }
+  };
 
   const deleteItem = (key) => {
-    if(typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     try {
-      localStorage.removeItem(key)
+      localStorage.removeItem(key);
     } catch (error) {
-      console.error("Error remuving from localStorage", error);
+      console.error('Error remuving from localStorage', error);
     }
-  }
-  
-  return{setItem, getItem, deleteItem}
+  };
+
+  return { setItem, getItem, deleteItem };
 }
