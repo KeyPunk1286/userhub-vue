@@ -10,7 +10,12 @@
       @submit="onFormSubmit"
     >
       <div class="flex flex-col gap-1">
-        <InputText name="email" type="text" placeholder="Email" fluid />
+        <InputText
+          name="email"
+          type="text"
+          placeholder="Email"
+          fluid
+        />
         <Message
           v-if="$form.email?.invalid"
           severity="error"
@@ -35,13 +40,20 @@
           variant="simple"
         >
           <ul class="my-0 px-4 flex flex-col gap-1">
-            <li v-for="(error, index) of $form.password.errors" :key="index">
+            <li
+              v-for="(error, index) of $form.password.errors"
+              :key="index"
+            >
               {{ error.message }}
             </li>
           </ul>
         </Message>
       </div>
-      <Button type="submit" severity="secondary" label="Submit" />
+      <Button
+        type="submit"
+        severity="secondary"
+        label="Submit"
+      />
     </Form>
   </div>
 </template>

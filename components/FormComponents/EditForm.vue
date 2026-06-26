@@ -14,7 +14,12 @@
       @submit="onFormSubmit"
     >
       <div class="flex flex-col gap-1">
-        <InputText name="email" type="text" placeholder="email" fluid />
+        <InputText
+          name="email"
+          type="text"
+          placeholder="email"
+          fluid
+        />
         <Message
           v-if="$form.email?.invalid"
           severity="error"
@@ -41,7 +46,12 @@
         </Message>
       </div>
       <div class="flex flex-col gap-1">
-        <InputText name="lastName" type="text" placeholder="Last Name" fluid />
+        <InputText
+          name="lastName"
+          type="text"
+          placeholder="Last Name"
+          fluid
+        />
         <Message
           v-if="$form.lastName?.invalid"
           severity="error"
@@ -52,7 +62,10 @@
         </Message>
       </div>
       <div class="flex flex-col gap-1">
-        <Textarea name="details" placeholder="Details" />
+        <Textarea
+          name="details"
+          placeholder="Details"
+        />
         <Message
           v-if="$form.details?.invalid"
           severity="error"
@@ -62,7 +75,11 @@
           {{ $form.details.error.message }}
         </Message>
       </div>
-      <Button type="submit" severity="secondary" label="Submit" />
+      <Button
+        type="submit"
+        severity="secondary"
+        label="Submit"
+      />
     </Form>
   </div>
 </template>

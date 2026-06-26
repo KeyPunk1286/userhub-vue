@@ -2,8 +2,7 @@
   <div class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col gap-4">
       <h1>
-        <span>{{ userInfo.firstName }}</span
-        ><span>{{ userInfo.lastName }}</span>
+        <span>{{ userInfo.firstName }}</span><span>{{ userInfo.lastName }}</span>
       </h1>
       <div>
         <h2>Here are your details:</h2>
@@ -14,7 +13,10 @@
         <p>{{ userInfo.email }}</p>
       </div>
       <div>
-        <button class="cursor-pointer" @click="moveToEditPage">
+        <button
+          class="cursor-pointer"
+          @click="moveToEditPage"
+        >
           <i class="pi pi-pencil" />
         </button>
       </div>

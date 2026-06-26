@@ -7,8 +7,15 @@
       class="flex flex-col gap-4 w-full sm:w-80"
       @submit="onFormSubmit"
     >
-      <FormField v-slot="$field" name="email" class="flex flex-col gap-1">
-        <InputText type="email" placeholder="Email" />
+      <FormField
+        v-slot="$field"
+        name="email"
+        class="flex flex-col gap-1"
+      >
+        <InputText
+          type="email"
+          placeholder="Email"
+        />
         <Message
           v-if="$field?.invalid"
           severity="error"
@@ -19,8 +26,15 @@
         </Message>
       </FormField>
 
-      <FormField v-slot="$field" name="firstName" class="flex flex-col gap-1">
-        <InputText type="text" placeholder="First Name" />
+      <FormField
+        v-slot="$field"
+        name="firstName"
+        class="flex flex-col gap-1"
+      >
+        <InputText
+          type="text"
+          placeholder="First Name"
+        />
         <Message
           v-if="$field?.invalid"
           severity="error"
@@ -31,8 +45,15 @@
         </Message>
       </FormField>
 
-      <FormField v-slot="$field" name="lastName" class="flex flex-col gap-1">
-        <InputText type="text" placeholder="Last Name" />
+      <FormField
+        v-slot="$field"
+        name="lastName"
+        class="flex flex-col gap-1"
+      >
+        <InputText
+          type="text"
+          placeholder="Last Name"
+        />
         <Message
           v-if="$field?.invalid"
           severity="error"
@@ -43,7 +64,11 @@
         </Message>
       </FormField>
 
-      <FormField v-slot="$field" name="password" class="flex flex-col gap-1">
+      <FormField
+        v-slot="$field"
+        name="password"
+        class="flex flex-col gap-1"
+      >
         <Password
           type="text"
           placeholder="Password"
@@ -61,7 +86,11 @@
         </Message>
       </FormField>
 
-      <FormField v-slot="$field" name="details" class="flex flex-col gap-1">
+      <FormField
+        v-slot="$field"
+        name="details"
+        class="flex flex-col gap-1"
+      >
         <Textarea placeholder="Details" />
         <Message
           v-if="$field?.invalid"
@@ -73,7 +102,11 @@
         </Message>
       </FormField>
 
-      <Button type="submit" severity="secondary" label="Submit" />
+      <Button
+        type="submit"
+        severity="secondary"
+        label="Submit"
+      />
     </Form>
   </div>
 </template>
