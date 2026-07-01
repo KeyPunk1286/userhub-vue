@@ -7,15 +7,8 @@
       class="flex flex-col gap-4 w-full sm:w-80"
       @submit="onFormSubmit"
     >
-      <FormField
-        v-slot="$field"
-        name="email"
-        class="flex flex-col gap-1"
-      >
-        <InputText
-          type="email"
-          placeholder="Email"
-        />
+      <FormField v-slot="$field" name="email" class="flex flex-col gap-1">
+        <InputText type="email" placeholder="Email" />
         <Message
           v-if="$field?.invalid"
           severity="error"
@@ -26,15 +19,8 @@
         </Message>
       </FormField>
 
-      <FormField
-        v-slot="$field"
-        name="firstName"
-        class="flex flex-col gap-1"
-      >
-        <InputText
-          type="text"
-          placeholder="First Name"
-        />
+      <FormField v-slot="$field" name="firstName" class="flex flex-col gap-1">
+        <InputText type="text" placeholder="First Name" />
         <Message
           v-if="$field?.invalid"
           severity="error"
@@ -45,15 +31,8 @@
         </Message>
       </FormField>
 
-      <FormField
-        v-slot="$field"
-        name="lastName"
-        class="flex flex-col gap-1"
-      >
-        <InputText
-          type="text"
-          placeholder="Last Name"
-        />
+      <FormField v-slot="$field" name="lastName" class="flex flex-col gap-1">
+        <InputText type="text" placeholder="Last Name" />
         <Message
           v-if="$field?.invalid"
           severity="error"
@@ -64,11 +43,7 @@
         </Message>
       </FormField>
 
-      <FormField
-        v-slot="$field"
-        name="password"
-        class="flex flex-col gap-1"
-      >
+      <FormField v-slot="$field" name="password" class="flex flex-col gap-1">
         <Password
           type="text"
           placeholder="Password"
@@ -86,11 +61,7 @@
         </Message>
       </FormField>
 
-      <FormField
-        v-slot="$field"
-        name="details"
-        class="flex flex-col gap-1"
-      >
+      <FormField v-slot="$field" name="details" class="flex flex-col gap-1">
         <Textarea placeholder="Details" />
         <Message
           v-if="$field?.invalid"
@@ -102,22 +73,20 @@
         </Message>
       </FormField>
 
-      <Button
-        type="submit"
-        severity="secondary"
-        label="Submit"
-      />
+      <Button type="submit" severity="secondary" label="Submit" />
     </Form>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
+import type { FormSubmitEvent } from '@primevue/forms';
 import { useToast } from 'primevue/usetoast';
 import { useAuthStore } from '@/stores/auth';
 import { navigateTo } from '#app';
+import type { RegistrationForm } from '~/types/forms';
 
 const toast = useToast();
 
@@ -155,24 +124,30 @@ const resolver = zodResolver(
   })
 );
 
-const onFormSubmit = async ({ valid, values }) => {
+// PrimeVue FormSubmitEvent expects Record<string, any>.
+// The Form component is not generic, so we cast e.values to LoginForm.
+
+const onFormSubmit = async ({
+  valid,
+  values,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}: FormSubmitEvent<Record<string, any>>) => {
   try {
-    if (valid) {
-      await authStore.registrationUser(values);
-
-      toast.add({
-        severity: 'success',
-        summary: 'Registration successful',
-        life: 3000,
-      });
-
-      navigateTo('/login');
-    }
-  } catch (error) {
+    if (!valid) return;
+    const form = values as RegistrationForm;
+    await authStore.registrationUser(form);
+    toast.add({
+      severity: 'success',
+      summary: 'Registration successful',
+      life: 3000,
+    });
+    navigateTo('/login');
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     toast.add({
       severity: 'error',
       summary: 'Registration Error',
-      detail: error.message,
+      detail: message,
       life: 3000,
     });
   }

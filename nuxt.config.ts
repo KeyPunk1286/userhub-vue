@@ -22,7 +22,7 @@ export default defineNuxtConfig({
   },
 
   modules: ['@primevue/nuxt-module'],
-  // @ts-ignore:
+
   primevue: {
     options: {
       theme: {
