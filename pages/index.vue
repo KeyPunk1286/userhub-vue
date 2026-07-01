@@ -1,8 +1,6 @@
 <template>
   <div class="flex flex-col gap-4 items-center justify-center h-screen">
-    <h1 class="text-3xl font-bold">
-      Welcome to UserHub
-    </h1>
+    <h1 class="text-3xl font-bold">Welcome to UserHub</h1>
     <div>
       <div v-if="isLogin">
         <p>
@@ -11,10 +9,7 @@
         <h2>Here are your details:</h2>
         <p>{{ userInfo.details }}</p>
       </div>
-      <NuxtLink
-        v-else
-        to="/register"
-      >
+      <NuxtLink v-else to="/register">
         <span class="mr-3">You can register here</span>
         <i class="pi pi-user-plus" />
       </NuxtLink>

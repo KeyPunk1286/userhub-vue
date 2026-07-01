@@ -14,12 +14,7 @@
       @submit="onFormSubmit"
     >
       <div class="flex flex-col gap-1">
-        <InputText
-          name="email"
-          type="text"
-          placeholder="email"
-          fluid
-        />
+        <InputText name="email" type="text" placeholder="email" fluid />
         <Message
           v-if="$form.email?.invalid"
           severity="error"
@@ -46,12 +41,7 @@
         </Message>
       </div>
       <div class="flex flex-col gap-1">
-        <InputText
-          name="lastName"
-          type="text"
-          placeholder="Last Name"
-          fluid
-        />
+        <InputText name="lastName" type="text" placeholder="Last Name" fluid />
         <Message
           v-if="$form.lastName?.invalid"
           severity="error"
@@ -62,10 +52,7 @@
         </Message>
       </div>
       <div class="flex flex-col gap-1">
-        <Textarea
-          name="details"
-          placeholder="Details"
-        />
+        <Textarea name="details" placeholder="Details" />
         <Message
           v-if="$form.details?.invalid"
           severity="error"
@@ -75,46 +62,46 @@
           {{ $form.details.error.message }}
         </Message>
       </div>
-      <Button
-        type="submit"
-        severity="secondary"
-        label="Submit"
-      />
+      <Button type="submit" severity="secondary" label="Submit" />
     </Form>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import type { FormResolverOptions, FormSubmitEvent } from '@primevue/forms';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { navigateTo } from '#app';
+import type { EditForm } from '~/types/forms';
 
 const authStore = useAuthStore();
 const { userInfo } = storeToRefs(authStore);
 
 const toast = useToast();
 
-const isReadyInfo = computed(() => !!userInfo.value.email);
+const isReadyInfo = computed(() => !!userInfo.value?.email);
 
 const initialValues = computed(() => ({
-  email: userInfo.value.email,
-  firstName: userInfo.value.firstName,
-  lastName: userInfo.value.lastName,
-  details: userInfo.value.details,
+  email: userInfo.value?.email || '',
+  firstName: userInfo.value?.firstName || '',
+  lastName: userInfo.value?.lastName || '',
+  details: userInfo.value?.details || '',
 }));
 
-const resolver = ({ values }) => {
-  const errors = {};
+const resolver = ({ values }: FormResolverOptions) => {
+  const form = values as EditForm;
 
-  if (!values.email) {
+  const errors: Record<string, { message: string }[]> = {};
+
+  if (!form.email) {
     errors.email = [{ message: 'Email is required.' }];
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
     errors.email = [{ message: 'Invalid email format.' }];
   }
 
-  if (!values.firstName) {
+  if (!form.firstName) {
     errors.firstName = [{ message: 'First name is required.' }];
   } else if (values.firstName.length < 2 || values.firstName.length > 30) {
     errors.firstName = [
@@ -122,7 +109,7 @@ const resolver = ({ values }) => {
     ];
   }
 
-  if (!values.lastName) {
+  if (!form.lastName) {
     errors.lastName = [{ message: 'Last name is required.' }];
   } else if (values.lastName.length < 2 || values.lastName.length > 30) {
     errors.lastName = [
@@ -130,7 +117,7 @@ const resolver = ({ values }) => {
     ];
   }
 
-  if (!values.details) {
+  if (!form.details) {
     errors.details = [{ message: 'Details is required.' }];
   } else if (values.details && values.details.length > 200) {
     errors.details = [{ message: 'Details must be up to 200 characters.' }];
@@ -141,18 +128,18 @@ const resolver = ({ values }) => {
   };
 };
 
-const onFormSubmit = async ({ valid, states }) => {
+const onFormSubmit = async ({ valid, states }: FormSubmitEvent) => {
   if (!valid) return;
 
   const values = {
-    email: states.email.value,
-    firstName: states.firstName.value,
-    lastName: states.lastName.value,
-    details: states.details.value,
+    email: states.email?.value ?? '',
+    firstName: states.firstName?.value ?? '',
+    lastName: states.lastName?.value ?? '',
+    details: states.details?.value ?? '',
   };
   const res = await authStore.updateUserData(values);
   if (res) {
-    navigateTo(`/profile/${userInfo.value.firstName}`);
+    navigateTo(`/profile/${userInfo.value?.firstName}`);
     toast.add({
       severity: 'success',
       summary: 'Form is submitted.',

@@ -1,5 +1,5 @@
 export function useLocalStorage() {
-  const setItem = (key, value) => {
+  const setItem = (key: string, value: string): void => {
     if (typeof window === 'undefined') return;
     try {
       localStorage.setItem(key, value);
@@ -8,7 +8,7 @@ export function useLocalStorage() {
     }
   };
 
-  const getItem = (key) => {
+  const getItem = (key: string): null | string => {
     if (typeof window === 'undefined') return null;
     try {
       return localStorage.getItem(key);
@@ -18,7 +18,7 @@ export function useLocalStorage() {
     }
   };
 
-  const deleteItem = (key) => {
+  const deleteItem = (key: string): void => {
     if (typeof window === 'undefined') return;
     try {
       localStorage.removeItem(key);
