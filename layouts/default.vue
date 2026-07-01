@@ -1,6 +1,8 @@
 <template>
   <div>
-    <Header />
+    <header class="fixed top-0 left-0 w-full bg-(--bg-white) z-50 px-40">
+      <HeaderComponent />
+    </header>
     <main>
       <slot />
     </main>
