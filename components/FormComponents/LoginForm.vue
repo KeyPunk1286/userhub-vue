@@ -6,6 +6,9 @@
       v-slot="$form"
       :initial-values
       :resolver
+      :validate-on-value-update="false"
+      :validate-on-blur="false"
+      :validate-on-mount="false"
       class="flex flex-col gap-4 w-full sm:w-60"
       @submit="onFormSubmit"
     >
